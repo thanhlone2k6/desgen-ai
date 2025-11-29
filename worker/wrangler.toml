@@ -1,0 +1,24 @@
+name = "desgen-ai-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+workers_dev = true
+
+# Bắt buộc thêm dòng này để Cloudflare định tuyến hợp lý (fix lỗi geo)
+[placement]
+mode = "smart"
+
+# Gợi ý vùng cho API Gemini (dùng US hoặc EU)
+[vars]
+REGION = "us"            # hoặc "eu"
+# Các key này được set qua wrangler secret, không cần ghi giá trị
+FREE_API_KEY = ""
+VIP_API_KEY = ""
+JWT_SECRET = ""
+RESEND_API_KEY = ""
+
+[kv_namespaces]
+binding = "DESGEN_KV"
+id = "cde29468fb2e486f93b08671affd5ae3"
+
+[env.production]
+name = "desgen-ai-worker"
