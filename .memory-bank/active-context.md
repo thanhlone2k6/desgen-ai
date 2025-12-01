@@ -1,9 +1,45 @@
 # Active Context - DesGen AI
 
 ## Current Session Focus
-**API Key Management & Unlimited Mode**: Replaced "API Connected" status with API key input field, removed auto-set default API key, temporarily enabled unlimited Banana Pro, and added validation to require API key.
+**v8.1.0 Release & Bug Fixes**: Fixed update dialog changelog scrollbar, fixed image preview modal z-index, fixed GitHub release file naming, and successfully deployed to GitHub.
 
-## Recent Work (Latest Session)
+## Recent Work (Latest Session - v8.1.0 Release)
+
+### 1. Update Dialog Changelog Scrollbar Fix
+- **Problem**: Changelog too long, no scrollbar, couldn't see buttons below
+- **Solution**: 
+  - Added `max-h-64` (max height 256px)
+  - Added `overflow-y-auto` for vertical scrolling
+  - Added custom CSS class `.changelog-scrollbar` with styled scrollbar
+  - Added `pr-2` padding to prevent text overlap with scrollbar
+- **Files Changed**:
+  - `components/UpdateDialog.tsx`: Added scrollbar styling
+  - `index.html`: Added `.changelog-scrollbar` CSS class
+
+### 2. Image Preview Modal Z-Index Fix
+- **Problem**: Modal not displaying when clicking on generated images
+- **Solution**:
+  - Increased modal z-index from `z-50` to `z-[10000]` (above UpdateDialog `z-[9999]`)
+  - Increased toolbar and close button z-index to `z-[10001]`
+  - Increased background opacity to `bg-black/95` for better visibility
+  - Added debug console.log for troubleshooting
+- **Files Changed**:
+  - `components/ImagePreviewModal.tsx`: Updated z-index values
+
+### 3. GitHub Release Deployment Fixes
+- **Problem**: Auto-update failing with 404 error (latest.yml file naming mismatch)
+- **Solution**:
+  - Fixed `latest.yml` file naming to match GitHub upload format
+  - Changed from `DesignGen Pro Setup 8.1.0.exe` (spaces) to `DesignGen.Pro.Setup.8.1.0.exe` (dots)
+  - Updated both `url` and `path` fields in latest.yml
+- **Files Changed**:
+  - `dist-electron/latest.yml`: Fixed file naming
+- **Deployment Steps**:
+  - Code pushed to GitHub (master branch)
+  - Tag v8.1.0 created and pushed
+  - Release created with 3 files: .exe, .blockmap, latest.yml
+
+### 4. Previous Session Work
 
 ### 1. API Key Input UI Changes
 - **Replaced**: "API Connected" status indicator → API Key input field
@@ -96,6 +132,10 @@
    - Easy clear functionality
 
 ## Current State
+- ✅ Version 8.1.0 released and deployed to GitHub
+- ✅ Update dialog changelog scrollbar fixed
+- ✅ Image preview modal z-index fixed
+- ✅ GitHub release file naming fixed
 - ✅ API key input field in sidebar
 - ✅ No auto-set default API key
 - ✅ Unlimited Banana Pro (temporary)

@@ -1082,10 +1082,10 @@ const App: React.FC = () => {
         <div className="flex items-center justify-between">
           <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">API Key</label>
           {sessionStorage.getItem('gemini_api_key') && (
-            <button
-              onClick={() => {
+        <button
+          onClick={() => {
                 if (confirm('Bạn có chắc muốn xóa API Key? Bạn sẽ cần nhập lại để tiếp tục sử dụng.')) {
-                  setApiKeyInput('');
+              setApiKeyInput('');
                   sessionStorage.removeItem('gemini_api_key');
                 }
               }}
@@ -1108,8 +1108,8 @@ const App: React.FC = () => {
                 sessionStorage.setItem('gemini_api_key', value.trim());
               } else if (value.trim().length === 0) {
                 sessionStorage.removeItem('gemini_api_key');
-              }
-            }}
+            }
+          }}
             placeholder="Nhập API Key..."
             className="w-full rounded-xl border border-slate-700 bg-slate-800/50 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition"
           />
@@ -1121,11 +1121,11 @@ const App: React.FC = () => {
               }}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg text-slate-500 hover:text-red-400 transition"
               title="Xóa API Key"
-            >
+        >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
+          </svg>
+        </button>
           )}
         </div>
         {sessionStorage.getItem('gemini_api_key') && (

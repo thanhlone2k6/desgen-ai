@@ -10,7 +10,18 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-electron
+release
 *.local
+
+# Build files (too large for GitHub)
+*.exe
+*.exe.blockmap
+*.dmg
+*.app
+win-unpacked
+mac-unpacked
+linux-unpacked
 
 # Editor directories and files
 .vscode/*

@@ -304,7 +304,9 @@ export const UpdateDialog: React.FC<UpdateDialogProps> = ({ isOpen, onClose }) =
                 {updateInfo.releaseNotes && (
                   <div className="mt-3 text-xs text-slate-400">
                     <p className="font-semibold mb-1">Thay đổi:</p>
-                    <div className="whitespace-pre-wrap">{updateInfo.releaseNotes}</div>
+                    <div className="changelog-scrollbar whitespace-pre-wrap max-h-64 overflow-y-auto overflow-x-hidden pr-2">
+                      {updateInfo.releaseNotes}
+                    </div>
                   </div>
                 )}
               </div>

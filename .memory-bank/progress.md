@@ -1,6 +1,31 @@
 # Progress Tracking - DesGen AI
 
-## Latest Session: API Key Management & Unlimited Mode
+## Latest Session: v8.1.0 Release & Bug Fixes
+
+### ✅ Completed
+1. **Update Dialog Changelog Scrollbar**
+   - Added max-height and overflow-y-auto
+   - Custom scrollbar styling (changelog-scrollbar class)
+   - Fixed issue where long changelog blocked buttons
+
+2. **Image Preview Modal Z-Index Fix**
+   - Increased z-index to z-[10000] (above all other modals)
+   - Fixed issue where modal didn't display when clicking images
+   - Improved background visibility
+
+3. **GitHub Release Deployment**
+   - Fixed latest.yml file naming (DesignGen.Pro.Setup.8.1.0.exe)
+   - Successfully pushed code to GitHub (master branch)
+   - Created and pushed tag v8.1.0
+   - Created GitHub release with 3 files (.exe, .blockmap, latest.yml)
+   - Fixed auto-update 404 error
+
+4. **Release Documentation**
+   - Created RELEASE_v8.1.0.md with full changelog
+   - Updated .gitignore to exclude build files
+   - Removed GitHub token from QUY_TRINH_UPDATE.md
+
+### 📝 Previous Session: API Key Management & Unlimited Mode
 
 ### ✅ Completed
 1. **API Key Input UI**
@@ -71,12 +96,15 @@
 - Updated memory bank files
 
 ### 🔄 Current Status
+- **Version**: 8.1.0 (released and deployed)
 - **Mode**: Hybrid (Worker proxy + Direct API fallback)
 - **Authentication**: API key-based (temporary, manual entry required)
 - **Storage**: sessionStorage for API keys (auto-clear on close)
 - **Error Handling**: Automatic fallback on location errors
 - **Banana Pro**: Unlimited (temporary)
 - **API Key**: Required, no auto-set, manual entry only
+- **UI Fixes**: Update dialog scrollbar, image preview modal z-index
+- **Deployment**: GitHub release v8.1.0 with auto-update support
 
 ### 📋 Next Steps (Optional)
 - Monitor API key usage patterns
@@ -90,12 +118,15 @@
 - API key must be re-entered each session (by design)
 
 ### 📊 Version Comparison
-| Feature | v6.2.2 | v8.0.0 (Before) | v8.0.0 (Current) |
-|---------|--------|------------------|-------------------|
-| API Call | Direct only | Worker only | Hybrid (Worker + Fallback) |
-| Location Errors | None | Frequent | Auto-fallback |
-| API Key Storage | localStorage | N/A | sessionStorage |
-| Auth Required | No | Yes | No (temporary) |
-| Auto-Set API Key | Yes | N/A | No (manual only) |
-| Banana Pro Limits | N/A | Yes (20 free) | Unlimited (temp) |
-| API Key Validation | No | N/A | Yes (required) |
+| Feature | v6.2.2 | v8.0.0 | v8.1.0 (Current) |
+|---------|--------|--------|-------------------|
+| API Call | Direct only | Hybrid (Worker + Fallback) | Hybrid (Worker + Fallback) |
+| Location Errors | None | Auto-fallback | Auto-fallback |
+| API Key Storage | localStorage | sessionStorage | sessionStorage |
+| Auth Required | No | No (temporary) | No (temporary) |
+| Auto-Set API Key | Yes | No (manual only) | No (manual only) |
+| Banana Pro Limits | N/A | Unlimited (temp) | Unlimited (temp) |
+| API Key Validation | No | Yes (required) | Yes (required) |
+| Update Dialog | N/A | Basic | Scrollable changelog |
+| Image Preview Modal | Working | Working | Fixed z-index |
+| GitHub Release | N/A | Manual | Auto-update ready |

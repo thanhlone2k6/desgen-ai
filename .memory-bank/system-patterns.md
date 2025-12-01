@@ -203,3 +203,96 @@ const progressInterval = setInterval(() => {
 }, 1500);
 ```
 
+## Modal Z-Index Pattern
+
+### Z-Index Hierarchy
+- **Update Dialog**: `z-[9999]` - Highest priority for critical updates
+- **Image Preview Modal**: `z-[10000]` - Must be above Update Dialog
+- **Toolbar/Close Buttons**: `z-[10001]` - Must be above modal content
+- **Other Modals**: `z-50` - Standard modals
+
+### Implementation
+```typescript
+// Modal container
+<div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95">
+  {/* Toolbar - higher z-index */}
+  <div className="absolute top-4 z-[10001]">
+    {/* Toolbar content */}
+  </div>
+  {/* Close button - higher z-index */}
+  <button className="absolute top-4 right-4 z-[10001]">
+    {/* Close icon */}
+  </button>
+  {/* Modal content */}
+  <div className="relative z-[10000]">
+    {/* Content */}
+  </div>
+</div>
+```
+
+## Scrollbar Pattern
+
+### Custom Scrollbar Styling
+```css
+/* Global scrollbar (index.html) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 10px;
+}
+
+/* Custom scrollbar for specific components */
+.changelog-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.changelog-scrollbar::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5); /* slate-800 */
+  border-radius: 4px;
+}
+.changelog-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.8); /* slate-600 */
+  border-radius: 4px;
+}
+```
+
+### Scrollable Content Pattern
+```typescript
+// For long content that needs scrolling
+<div className="max-h-64 overflow-y-auto overflow-x-hidden pr-2 changelog-scrollbar">
+  {/* Long content */}
+</div>
+// max-h-64: Limits height to 256px
+// overflow-y-auto: Shows vertical scrollbar when needed
+// overflow-x-hidden: Hides horizontal scrollbar
+// pr-2: Padding to prevent text overlap with scrollbar
+```
+
+## GitHub Release Pattern
+
+### latest.yml File Structure
+```yaml
+version: 8.1.0
+files:
+  - url: DesignGen.Pro.Setup.8.1.0.exe  # Must match GitHub filename exactly
+    sha512: <hash>
+    size: <bytes>
+path: DesignGen.Pro.Setup.8.1.0.exe  # Must match url
+sha512: <hash>
+releaseDate: '2025-11-29T18:56:41.271Z'
+```
+
+### Important Notes
+- **File Naming**: GitHub may change spaces to dots when uploading
+- **URL Matching**: The `url` and `path` in latest.yml must match the actual filename on GitHub
+- **Required Files**: 
+  - `.exe` installer
+  - `.exe.blockmap` for delta updates
+  - `latest.yml` for version checking
+- **Upload Order**: Upload all 3 files to GitHub Release for auto-update to work
+

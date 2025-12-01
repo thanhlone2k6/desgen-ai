@@ -135,73 +135,73 @@ const callWorkerProxy = async (model: string, payload: any): Promise<any> => {
   // (This is handled in the catch block below)
   
   try {
-    const response = await fetch(`${WORKER_BASE_URL}/proxy/image`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        model,
-        ...payload
-      })
-    });
+  const response = await fetch(`${WORKER_BASE_URL}/proxy/image`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      model,
+      ...payload
+    })
+  });
 
-    if (!response.ok) {
-      let errorMessage = `Request failed with status ${response.status}`;
-      let errorCode: string | undefined;
+  if (!response.ok) {
+    let errorMessage = `Request failed with status ${response.status}`;
+    let errorCode: string | undefined;
+    
+    try {
+      const errorData = await response.json();
       
-      try {
-        const errorData = await response.json();
-        
       // TEMPORARILY DISABLED - Unlimited Banana Pro
       /*
       if (response.status === 403 && errorData.code === 'upgrade_required') {
         throw new Error('Bạn đã sử dụng hết lượt miễn phí. Vui lòng nâng cấp để tiếp tục sử dụng.');
       }
       */
-        
-        if (response.status === 401) {
+      
+      if (response.status === 401) {
           // If 401 and have API key, fallback to direct API
           if (apiKey) {
             console.log('Auth failed, falling back to direct API call...');
             return await callDirectAPI(model, payload, apiKey);
           }
-          throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        }
-        
+        throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+      }
+      
         // Check for location error code - FALLBACK to direct API
-        if (errorData.code === 'location_not_supported') {
+      if (errorData.code === 'location_not_supported') {
           if (apiKey) {
             console.log('Worker location error detected, falling back to direct API call...');
             return await callDirectAPI(model, payload, apiKey);
           }
-          errorCode = 'location_not_supported';
+        errorCode = 'location_not_supported';
           if (errorData.suggestion) {
             errorMessage = errorData.error || errorMessage;
           }
+      }
+      
+      // Extract error message from various possible structures
+      if (typeof errorData.error === 'string') {
+        errorMessage = errorData.error;
+      } else if (errorData.error?.message) {
+        errorMessage = String(errorData.error.message);
+      } else if (errorData.message) {
+        errorMessage = String(errorData.message);
+      } else if (errorData.error) {
+        // If error is an object, try to extract meaningful info
+        if (errorData.error.details && Array.isArray(errorData.error.details)) {
+          const detailMessages = errorData.error.details
+            .map((d: any) => d.message || JSON.stringify(d))
+            .filter(Boolean)
+            .join('; ');
+          errorMessage = detailMessages || String(errorData.error);
+        } else {
+          errorMessage = String(errorData.error);
         }
-        
-        // Extract error message from various possible structures
-        if (typeof errorData.error === 'string') {
-          errorMessage = errorData.error;
-        } else if (errorData.error?.message) {
-          errorMessage = String(errorData.error.message);
-        } else if (errorData.message) {
-          errorMessage = String(errorData.message);
-        } else if (errorData.error) {
-          // If error is an object, try to extract meaningful info
-          if (errorData.error.details && Array.isArray(errorData.error.details)) {
-            const detailMessages = errorData.error.details
-              .map((d: any) => d.message || JSON.stringify(d))
-              .filter(Boolean)
-              .join('; ');
-            errorMessage = detailMessages || String(errorData.error);
-          } else {
-            errorMessage = String(errorData.error);
-          }
-        }
-      } catch (parseError) {
+      }
+    } catch (parseError) {
         // If JSON parse fails, try direct API if available
         if (apiKey && apiKey.trim().length > 0) {
           console.log('Worker error, falling back to direct API call...');
@@ -211,20 +211,20 @@ const callWorkerProxy = async (model: string, payload: any): Promise<any> => {
         if (!apiKey || apiKey.trim().length === 0) {
           throw new Error("Vui lòng nhập API key để sử dụng dịch vụ. API key là bắt buộc.");
         }
-        // If JSON parse fails, use default
-        if (parseError instanceof Error && parseError.message) {
-          throw parseError; // Re-throw our custom errors
-        }
+      // If JSON parse fails, use default
+      if (parseError instanceof Error && parseError.message) {
+        throw parseError; // Re-throw our custom errors
       }
-      
-      const error = new Error(errorMessage) as any;
-      if (errorCode) {
-        error.code = errorCode;
-      }
-      throw error;
     }
+    
+    const error = new Error(errorMessage) as any;
+    if (errorCode) {
+      error.code = errorCode;
+    }
+    throw error;
+  }
 
-    return await response.json();
+  return await response.json();
   } catch (networkError: any) {
     // Network error or worker unavailable - try direct API if available
     if (apiKey && apiKey.trim().length > 0) {

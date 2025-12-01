@@ -37,7 +37,10 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
     }
   }, [task]);
 
-  if (!task || !task.resultUrl) return null;
+  if (!task || !task.resultUrl) {
+    console.log('ImagePreviewModal: Missing task or resultUrl', { task, hasResultUrl: !!task?.resultUrl });
+    return null;
+  }
 
   const hasReference = task.config.referenceImages.length > 0;
   const referenceImage = hasReference ? `data:${task.config.referenceImages[0].mimeType};base64,${task.config.referenceImages[0].base64}` : null;
@@ -73,10 +76,10 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 backdrop-blur-sm" onClick={onClose}>
 
       {/* Toolbar */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex gap-2 rounded-full bg-white/10 px-4 py-2 text-white backdrop-blur-md border border-white/20" onClick={(e) => e.stopPropagation()}>
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[10001] flex gap-2 rounded-full bg-white/10 px-4 py-2 text-white backdrop-blur-md border border-white/20" onClick={(e) => e.stopPropagation()}>
         {!isVideo && (
           <>
             <button onClick={() => { setScale(scale + 0.5) }} className="p-2 hover:text-brand-400 transition" title="Zoom In">
@@ -144,7 +147,7 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
 
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 hover:text-red-400 backdrop-blur-md"
+        className="absolute top-4 right-4 z-[10001] rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 hover:text-red-400 backdrop-blur-md"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

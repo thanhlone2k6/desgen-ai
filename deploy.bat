@@ -15,18 +15,10 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo [1/5] Checking git repository...
-REM Fix dubious ownership error
-git config --global --add safe.directory "E:/Coding/DESGEN AI"
 if not exist .git (
     echo Initializing git repository...
     git init
     git remote add origin https://github.com/thanhlone2k6/desgen-ai.git
-) else (
-    REM Check if remote exists, if not add it
-    git remote get-url origin >nul 2>&1
-    if %ERRORLEVEL% NEQ 0 (
-        git remote add origin https://github.com/thanhlone2k6/desgen-ai.git
-    )
 )
 
 echo [2/5] Adding files...

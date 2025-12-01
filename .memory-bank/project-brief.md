@@ -3,7 +3,7 @@
 ## Project Overview
 DesGen AI Pro is a desktop application for AI-powered image and video generation using Google Gemini models. The application uses Electron + React + TypeScript for the frontend and Cloudflare Workers + Workers KV for the backend.
 
-**Current Version**: 8.0.0 (with Direct API Fallback)
+**Current Version**: 8.1.0 (API Key Management & Unlimited Mode)
 
 ## Tech Stack
 
@@ -115,12 +115,15 @@ DesGen AI Pro is a desktop application for AI-powered image and video generation
 
 ## Recent Fixes & Changes
 
-### v8.0.0 (Current - Latest Updates)
+### v8.1.0 (Current - Latest Updates)
 - ✅ **API Key Input Field**: Replaced "API Connected" status with API key input in sidebar
 - ✅ **No Auto-Set API Key**: Removed default API key auto-set, user must manually enter
 - ✅ **Unlimited Banana Pro**: Temporarily disabled Banana Pro limits (all users unlimited)
 - ✅ **API Key Validation**: Required validation before generation (frontend + backend)
 - ✅ **Clear API Key Button**: Added button to easily clear API key from sessionStorage
+- ✅ **Update Dialog Scrollbar**: Fixed changelog scrollbar in update dialog (max-height + overflow-y-auto)
+- ✅ **Image Preview Modal Fix**: Fixed z-index issue (z-[10000]) to ensure modal displays above all elements
+- ✅ **GitHub Release Fix**: Fixed latest.yml file naming to match GitHub upload format (DesignGen.Pro.Setup.8.1.0.exe)
 - ✅ **Direct API Fallback**: Automatic fallback when Worker fails
 - ✅ **SessionStorage for API keys**: Auto-clear on app close, auto-remove when input cleared
 - ✅ **AuthScreen disabled**: Temporarily using API key mode
@@ -191,7 +194,13 @@ DESGEN AI/
 - API keys in localStorage
 - No location errors
 
-### v8.0.0 (Current)
+### v8.0.0
 - Hybrid mode: Worker proxy + Direct API fallback
 - API keys in sessionStorage
 - Automatic fallback on location errors
+
+### v8.1.0 (Current)
+- All v8.0.0 features
+- Enhanced update dialog with scrollable changelog
+- Fixed image preview modal z-index
+- GitHub release deployment fixes

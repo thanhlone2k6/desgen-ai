@@ -141,7 +141,7 @@ export const ApiKeyChecker: React.FC<ApiKeyCheckerProps> = ({ onReady }) => {
 
       {/* Footer */}
       <p className="mt-6 text-xs text-slate-600">
-        By ThanhNg • v8.1.0
+        By ThanhNg • v5.0
       </p>
     </div>
   );
