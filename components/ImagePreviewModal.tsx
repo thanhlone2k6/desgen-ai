@@ -15,6 +15,16 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [imageError, setImageError] = useState(false);
+
+  // Debug log when modal is rendered
+  useEffect(() => {
+    console.log('ImagePreviewModal rendered:', { 
+      taskId: task?.id, 
+      hasResultUrl: !!task?.resultUrl,
+      resultUrl: task?.resultUrl?.substring(0, 50) 
+    });
+  }, [task]);
 
   // Comparison State
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -28,6 +38,7 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
       setScale(1);
       setPosition({ x: 0, y: 0 });
       setSliderPosition(50);
+      setImageError(false); // Reset image error state
       // Auto-enable comparison if it's T-Shirt design and has reference images
       if (task.config.style === GenerationStyle.TSHIRT_DESIGN && task.config.referenceImages.length > 0) {
         setIsComparing(true);
@@ -37,9 +48,42 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
     }
   }, [task]);
 
-  if (!task || !task.resultUrl) {
-    console.log('ImagePreviewModal: Missing task or resultUrl', { task, hasResultUrl: !!task?.resultUrl });
+  if (!task) {
+    console.log('ImagePreviewModal: Missing task');
     return null;
+  }
+
+  if (!task.resultUrl) {
+    console.error('ImagePreviewModal: Missing resultUrl', { 
+      taskId: task.id, 
+      status: task.status,
+      hasResultUrl: !!task?.resultUrl 
+    });
+    // Show error message instead of returning null
+    return (
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 backdrop-blur-sm" onClick={onClose}>
+        <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 max-w-md mx-4 border border-white/20" onClick={(e) => e.stopPropagation()}>
+          <div className="text-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h2 className="text-xl font-bold mb-2">Không thể hiển thị hình ảnh</h2>
+            <p className="text-sm text-gray-300 mb-4">
+              Hình ảnh này không có URL kết quả. Có thể hình ảnh chưa được tạo xong hoặc đã bị mất dữ liệu.
+            </p>
+            <p className="text-xs text-gray-400 mb-6">
+              Trạng thái: {task.status === 'completed' ? 'Đã hoàn thành' : task.status === 'processing' ? 'Đang xử lý' : task.status === 'failed' ? 'Thất bại' : task.status}
+            </p>
+            <button
+              onClick={onClose}
+              className="px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-full transition"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const hasReference = task.config.referenceImages.length > 0;
@@ -178,12 +222,27 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
             /* Comparison View */
             <div className="relative select-none shadow-2xl rounded-lg overflow-hidden group border border-white/10">
               {/* After Image (Background) - The Clean Result */}
-              <img
-                src={task.resultUrl}
-                className="block max-h-[85vh] max-w-[90vw] object-contain bg-white"
-                draggable={false}
-                alt="After"
-              />
+              {imageError ? (
+                <div className="flex items-center justify-center h-[85vh] w-[90vw] bg-gray-800 text-white">
+                  <div className="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-sm">Không thể tải hình ảnh</p>
+                  </div>
+                </div>
+              ) : (
+                <img
+                  src={task.resultUrl}
+                  className="block max-h-[85vh] max-w-[90vw] object-contain bg-white"
+                  draggable={false}
+                  alt="After"
+                  onError={() => {
+                    console.error('ImagePreviewModal: Failed to load image', task.resultUrl);
+                    setImageError(true);
+                  }}
+                />
+              )}
 
               {/* Before Image (Foreground) - The Rough Original */}
               <div
@@ -231,20 +290,50 @@ export const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ task, onCl
             /* Standard View (Video or Image) */
             <div className="shadow-2xl rounded-lg overflow-hidden border border-white/10 bg-white/5">
               {isVideo ? (
-                <video
-                  src={task.resultUrl}
-                  controls
-                  autoPlay
-                  loop
-                  className="block max-h-[85vh] max-w-[90vw]"
-                />
+                imageError ? (
+                  <div className="flex items-center justify-center h-[85vh] w-[90vw] bg-gray-800 text-white">
+                    <div className="text-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-sm">Không thể tải video</p>
+                    </div>
+                  </div>
+                ) : (
+                  <video
+                    src={task.resultUrl}
+                    controls
+                    autoPlay
+                    loop
+                    className="block max-h-[85vh] max-w-[90vw]"
+                    onError={() => {
+                      console.error('ImagePreviewModal: Failed to load video', task.resultUrl);
+                      setImageError(true);
+                    }}
+                  />
+                )
               ) : (
-                <img
-                  src={task.resultUrl}
-                  alt="Result"
-                  className="block max-h-[85vh] max-w-[90vw] object-contain"
-                  draggable={false}
-                />
+                imageError ? (
+                  <div className="flex items-center justify-center h-[85vh] w-[90vw] bg-gray-800 text-white">
+                    <div className="text-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-sm">Không thể tải hình ảnh</p>
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    src={task.resultUrl}
+                    alt="Result"
+                    className="block max-h-[85vh] max-w-[90vw] object-contain"
+                    draggable={false}
+                    onError={() => {
+                      console.error('ImagePreviewModal: Failed to load image', task.resultUrl);
+                      setImageError(true);
+                    }}
+                  />
+                )
               )}
             </div>
           )}

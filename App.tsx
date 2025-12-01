@@ -2099,7 +2099,16 @@ const App: React.FC = () => {
                               src={task.resultUrl}
                               className="h-full w-full object-cover"
                               autoPlay muted loop playsInline
-                              onClick={() => setPreviewTask(task)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Video clicked:', { taskId: task.id, hasResultUrl: !!task.resultUrl, resultUrl: task.resultUrl?.substring(0, 50) });
+                                if (task.resultUrl) {
+                                  console.log('Setting preview task:', task.id);
+                                  setPreviewTask(task);
+                                } else {
+                                  console.error('Cannot open preview: task missing resultUrl', task.id);
+                                }
+                              }}
                             />
                           ) : (
                             <img
@@ -2107,7 +2116,16 @@ const App: React.FC = () => {
                               className="h-full w-full object-cover cursor-pointer transition duration-700 group-hover:scale-110"
                               alt="Result"
                               loading="lazy"
-                              onClick={() => setPreviewTask(task)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('Image clicked:', { taskId: task.id, hasResultUrl: !!task.resultUrl, resultUrl: task.resultUrl?.substring(0, 50) });
+                                if (task.resultUrl) {
+                                  console.log('Setting preview task:', task.id);
+                                  setPreviewTask(task);
+                                } else {
+                                  console.error('Cannot open preview: task missing resultUrl', task.id);
+                                }
+                              }}
                             />
                           )
                         ) : (
@@ -2282,10 +2300,17 @@ const App: React.FC = () => {
       </div>
 
       {/* MODALS */}
+      {(() => {
+        console.log('Rendering modals section, previewTask:', previewTask ? { id: previewTask.id, hasResultUrl: !!previewTask.resultUrl } : null);
+        return null;
+      })()}
       {previewTask && (
           <ImagePreviewModal
             task={previewTask}
-            onClose={() => setPreviewTask(null)}
+            onClose={() => {
+              console.log('Closing preview modal');
+              setPreviewTask(null);
+            }}
             onToggleFavorite={handleToggleFavorite}
             onEdit={(task) => {
               setPreviewTask(null);

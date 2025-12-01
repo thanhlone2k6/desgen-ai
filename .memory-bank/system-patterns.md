@@ -277,14 +277,14 @@ const progressInterval = setInterval(() => {
 
 ### latest.yml File Structure
 ```yaml
-version: 8.1.0
+version: 8.2.0
 files:
-  - url: DesignGen.Pro.Setup.8.1.0.exe  # Must match GitHub filename exactly
+  - url: DesignGen.Pro.Setup.8.2.0.exe  # Must match GitHub filename exactly (dots, not spaces)
     sha512: <hash>
     size: <bytes>
-path: DesignGen.Pro.Setup.8.1.0.exe  # Must match url
+path: DesignGen.Pro.Setup.8.2.0.exe  # Must match url
 sha512: <hash>
-releaseDate: '2025-11-29T18:56:41.271Z'
+releaseDate: '2025-12-01T00:11:13.556Z'
 ```
 
 ### Important Notes
